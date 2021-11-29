@@ -6,7 +6,7 @@ public class CollisionPathing {
 	
 	private static float m1 = 10;
 	private static float m2 = 1;
-	private static float r1 = .1f;
+	private static float r1 = 0f;
 	private static float r2 = .1f;
 	private static int length = 360;
 	private static float speed = 1;
@@ -27,9 +27,9 @@ public class CollisionPathing {
 		for (int t = 0 ; t < length; t++) {
 			float time = speedtick * t;
 			//x coord
-			pos[t][x] = -time;
+			pos[t][x] = -88f + time * time;
 			//y coord
-			pos[t][y] = time * time;
+			pos[t][y] = -10f;
 		}
 		
 //		pos[0] = new float[] {0, 0};
@@ -38,18 +38,18 @@ public class CollisionPathing {
 //		pos[3] = new float[] {0, 1};
 //		pos[4] = new float[] {0, 0};
 //		pos[5] = new float[] {10, 10};
-		writer.write("Scene.Clear;\n");
-		writer.write("Sim.frequency = "+tickrate+";\n");
+//		writer.write("Scene.Clear;\n");
+//		writer.write("Sim.frequency = "+tickrate+";\n");
 		
 		float[] vo1 = new float[] {(pos[1][x] - pos[0][x]) * tickrate, (pos[1][y] - pos[0][y]) * tickrate};
 		for (int t = 1; t < length - 1; t++) {
 			float[] po1 = pos[t];
 			float[] p1 = pos[t + 1];
 			float[] v1 = new float[] {(p1[x] - po1[x]) * tickrate, (p1[y] - po1[y]) * tickrate};
-			float[] vo2 = new float[] {speed + 1, 0};
+			float[] vo2 = new float[] {(float) (vo1[x] * 1.5) , (float) (vo1[y] * 1.5)};
 			float[] po2 = moveProjectile(((float)t / tickrate) - (1f / tickrate), po1, vo2);
 			writer.write("scene.addCircle({"
-					+ "pos := ["+po2[x]+", "+po2[y]+"];"
+					+ "pos := ["+(po2[x])+", "+(po2[y])+"];"
 					+ "vel := ["+vo2[x]+", "+vo2[y]+"];"
 					+ "radius := "+r2+";"
 					+ "restitution := 1; "
@@ -66,16 +66,16 @@ public class CollisionPathing {
 			System.out.println(po2[x] +", "+po2[y]);
 			vo1 = v1;
 		}
-		writer .write("scene.addCircle({"
-				+ "pos := ["+pos[0][x]+", "+pos[0][y]+"];"
-				+ "vel := [0, 0];"
-				+ "radius := "+r1+";"
-				+ "restitution := 1;"
-				+ "collideSet := 513;"
-				+ "heteroCollide := false;"
-				+ "density := "+density1+";"
-				+ "color := [1.0, 0, 0, 1.0];"
-				+ "});");
+//		writer .write("scene.addCircle({"
+//				+ "pos := ["+pos[0][x]+", "+pos[0][y]+"];"
+//				+ "vel := [0, 0];"
+//				+ "radius := "+r1+";"
+//				+ "restitution := 1;"
+//				+ "collideSet := 513;"
+//				+ "heteroCollide := false;"
+//				+ "density := "+density1+";"
+//				+ "color := [1.0, 0, 0, 1.0];"
+//				+ "});");
 		writer.close();
 	}
 	public static float[] calculateVelocity(float[] initialVelocity1, float[] velocity1) {
